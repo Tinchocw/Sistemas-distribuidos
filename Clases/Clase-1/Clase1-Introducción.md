@@ -2,8 +2,8 @@
 
 ## Conceptos de materias anteriormente vistas
 
-    • Programación concurrente: Sincronizar procesos.
-    • Paralelizar tareas o concurrencia de las mismas  pero en los recursos más allá de un mismo sistema, sino que en distintos.
+* Programación concurrente: Sincronizar procesos.
+* Paralelizar tareas o concurrencia de las mismas  pero en los recursos más allá de un mismo sistema, sino que en distintos.
 
 ## ¿Qué es la programación distribuida?
 
