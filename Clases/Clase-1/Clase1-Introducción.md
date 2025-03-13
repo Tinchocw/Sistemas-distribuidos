@@ -133,7 +133,7 @@ La ley de Conway establece que las organizaciones que diseñan sistemas están l
     Administración de recursos de host OS hacia el guest OS 
     * Implementación de mecanismo de seguridad
 
-![virtualización](image.png)
+![virtualización](image-3.png)
 
 ## Docker 
 
@@ -175,7 +175,7 @@ Basado fuertemente en features provisots por el kernel del OS y el Hypervisor:
     * Acceso de REST API a través de unix socket
     * Gran cantidad de conmandos disponibles 
 
-![docker](image.png)
+![docker](image-6.png)
 
 ### Conceptos básicos 
 
@@ -200,7 +200,7 @@ Basado fuertemente en features provisots por el kernel del OS y el Hypervisor:
     * Directorios compartidos entre el Host OS y el Container
     * Necesario para dar persistencia a las aplicaciones 
 
-![ejemplo dockerfile](image-1.png) 
+![ejemplo dockerfile](image-4.png) 
 
 
 ### Docker Compose
@@ -217,4 +217,4 @@ Basado fuertemente en features provisots por el kernel del OS y el Hypervisor:
     * Intutitivo 
     * Mayoria de los comandos de docker disponibles
 
-![docker-compose.yml](image-2.png)
+![docker-compose.yml](image-5.png)
