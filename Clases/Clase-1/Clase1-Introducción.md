@@ -127,13 +127,22 @@ La ley de Conway establece que las organizaciones que diseñan sistemas están l
     * Seguridad en el acceso 
     * Diferenciación en instrucciones con privilegio y sin privilegio
 
-* Hypervisor(Virtual Machine Vector)
+* Hypervisor(Virtual Machine Vector) --> Emulador
     * Manager de VMs
     * Emulación de Hardware Capabilities
-    Administración de recursos de host OS hacia el guest OS 
+    * Administración de recursos de host OS hacia el guest OS 
     * Implementación de mecanismo de seguridad
 
 ![virtualización](image-3.png)
+
+Se permitio el acceso al hardware por un asensor. En primera instancia lo que se hacia era poner el hipervisor por arriba del hardware.
+
+Luego en los años 2000 se agrega una nueva capa, entonces me quedaría un sistema operativo y luego el manager se instala sobre ese sistema operativo. Esto era bastante lento.
+
+![virtualización-2](image-7.png)
+
+En el segundo caso, en los containers, aparecen los contenedores, en este caso hay un unico sistema operativo en la computadara, y cada una de las aplicaciones son consideradas como procesos, que se van a correr dentro del Container.
+
 
 ## Docker 
 
@@ -161,7 +170,7 @@ Basado fuertemente en features provisots por el kernel del OS y el Hypervisor:
 ### Engine
 
 * Docker Daemon:
-    * Es el proceso que corre en segundo plano y se encarga de administrar los containers del sistema.    
+    * Es el proceso que corre en segundo plano y se encarga de administrar los containers del sistema. Es el servidor de docker, que expone una API.    
     * Manejo de todos los recursos(imagenes, volumes, networks, containers, etc.)
     * Nueva funcionnalidad a través de Plugíns(Ej. [convoy](https://github.com/rancher/convoy)).
 
@@ -191,7 +200,7 @@ Basado fuertemente en features provisots por el kernel del OS y el Hypervisor:
     * Se puede reutilizar para contruir nuevas imagenes
 
 * **Container**
-    * Ejecución de comandos dentro de una imagen
+    * Ejecución de comandos dentro de una imagen. Un proceso corriendo.
     * Kernel compartido entre el Host OS y el Container
     * Al terminar el comando ejecutar, el container deja de existir 
     * No proveen la persistencia 
@@ -202,6 +211,10 @@ Basado fuertemente en features provisots por el kernel del OS y el Hypervisor:
 
 ![ejemplo dockerfile](image-4.png) 
 
+* Cuando se corre un RUN lo que se crea es un nuevo layer.
+* Cuando se terminan los comandos de la imagen es cuando se cierra la imagen.
+
+* Copiar los archivos que más cambian al final, para poder aprovechar el cache de las capas anteriores.
 
 ### Docker Compose
 
@@ -218,3 +231,45 @@ Basado fuertemente en features provisots por el kernel del OS y el Hypervisor:
     * Mayoria de los comandos de docker disponibles
 
 ![docker-compose.yml](image-5.png)
+
+* De los puertos que se exponen, el primero es el puerto del host y el segundo es el puerto del container, al que le puedo pegar desde la terminal.
+
+
+## Comandos
+
+* **docker run**
+    * Correr un container
+    * -d: detach
+    * -p: port mapping
+    * -v: volume mapping
+    * -e: environment variables
+    * -it: interactive mode
+    * --rm: remove container after exit
+
+* **docker ps**
+    * Listar containers
+    * -a: all containers
+
+* **docker images**
+    * Listar imagenes
+
+* **docker build**
+    * Construir una imagen
+    * -t: tag
+
+* **docker exec**
+    * Ejecutar un comando dentro de un container
+    * -it: interactive mode
+
+* **docker-compose**
+    * Administrar multiples containers
+    * up: levantar containers
+    * down: bajar containers
+    * logs: ver logs de containers
+    * exec: ejecutar comando en container
+    * build: construir imagenes
+    * restart: reiniciar containers
+    
+* **docker logs**
+    * Ver los logs de un container
+    * -f: follo
