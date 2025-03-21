@@ -140,3 +140,47 @@ Framework de documentación:
 ### Contenido de la documentación
 
 1. 
+
+
+# Nobmbres y direcciones 
+
+* Nombres
+    * Permiten identificar unívocamente a una entidad dentro de un sistema
+    * Deben describir a la entidad
+    * Abstraen al recurso de las propiedades que atan al mismo con el sistema (lugar geográfico, direcciones de red)
+* Direccionamiento (Addressing)
+    * Mapeo entre un nombre y una dirección
+    * Dirección de una entidad puede cambiar, nombre no (*)
+    * Dirección puede ser reutilizada
+
+
+## Ejemplos 
+
+* Domain Name (name) -> IP Address (address)
+    * Mapeo de un servicio/nodo/otra entidad a una dirección IP
+    * Traducción a través de protocolo DNS
+
+![alt text](image-3.png)
+
+Probar el comando dig y analzar la respuesta.
+
+
+
+
+* IP Address (name) -> Ethernet Address (address)
+    * IP address identifica a un nodo en un red (sea local o no)
+    * Ethernet address identifica a NIC (network interface card) de un nodo
+en una red local 
+    * Resolución se realiza a través de protocolo ARP en IPv4 o ND
+(Neighbor Discovery) en IPv6
+* Service (name) -> Instances (address)
+    * Mapeo del nombre de un servicio a alguna instancia
+    * Resolución a través de Service Discovery(buscar un poco más acerca del tema )
+    * Diferentes implementaciones existentes: Zookeeper, Istio, Linkerd
+
+
+![alt text](image-4.png)
+
+Lo que se hace en este caso es para servicios privados de la misma empresa, Puede servir para cuando se cae un servicio privado, lo que hago es redirigir a otro servicio que esté funcionando. O puede estar el caso en el que quiero que haya veces que vaya hacia un servicio o hacia otro.
+
+*QUIERO SABER PORQUE NO USAR DNS PARA ESTO*
