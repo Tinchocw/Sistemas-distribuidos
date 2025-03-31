@@ -200,6 +200,11 @@ Diagrama de robustez:
 
 
 
+### Algunas deficiniciones
+
+* **URL**: Uniform Resource Locator, es un tipo de URI, pero con la particularidad de que siempre proporciona una manera de acceder al recurso. Incluye el protocolo (HTTP, HTTPS, FTP, etc.), el dominio o IP, y opcionalmente un path hacia el recurso.
+* **URI**: Uniform Resource Identifier, es un identificador general que puede referirse a cualquier recurso en la web, ya sea una página, un archivo, un correo, etc. Puede ser local o remoto, y no necesariamente tiene que ser accesible a través de la web.
+
 
 
 
