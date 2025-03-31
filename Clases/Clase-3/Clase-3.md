@@ -91,7 +91,7 @@ Particionamiento de datos: Los datos se deben poder separar, la función se pued
 * MIMD: Multiple Instruction Multiple Data: Multiples procesadores, muchos datos. Es el caso más natural.
 
     * Multiprocessorrs: Con memeoira y/p clock compartidos
-    * completar ...
+    * Multicomputers: sin memoria ni clock compartidos
 
 
 
@@ -102,15 +102,29 @@ Particionamiento de datos: Los datos se deben poder separar, la función se pued
  ### MIMD - Multiprocessors - NUMA 
 
 * Non-Uniform Memory Access
-* Cada CPU controla un bloque de memeoraia local como su home agent 
+    * Cada CPU controla un bloque de memeoraia local como su home agent 
+    * Mayor ancho de banda si se respeta el acceso a memoria local.
+    * Ideado en SGI, presente en Linux kernel y MS Servers.
+    * Luego de años en desuso, nuevamente se ofrece en Cloud (ver Ej.)
 
-COMPLETAR 
+
 
 
 ### MIMD - Multiprocessors - UMA
 
+* Uniform Memory Access (UMA == non-NUMA)
+    * Tiempo de acceso a la memoria es idéntico para todos los procesadores.
+    * Ancho de banda compartido por todos.
+    * Performance balanceada para aplicaciones de uso general
 
-## Multicomputing
+
+## Multicomputing - sin memoria compartida 
+
+*  Cada computadora tiene su propia memoria local
+*  Cada computadora puede fallar de forma independiente
+*  No poseen un reloj central de ejecución de instrucciones
+*  Requieren comunicación entre computadoras:
+    *  Networking: LAN, MAN, WAN
 
 
 
@@ -137,10 +151,42 @@ Framework de documentación:
 
     ![Arquitectura 4+1](image-2.png)
 
-### Contenido de la documentación
+## Vista Lógica
+* Estructura y funcionalidad del sistema (Clases, Estados) Vista de Física (o Despliegue)
+* Topología y Conexiones entre componentes físicos (Despliegue)
+* Expone la arquitectura delsistema (Robustez)Vista de Desarrollo (o de Implementación)
+* Artefactos que componen al sistema (Paquetes, Componentes) Vista de Procesos (o Dinámica)
+* Descripción de escenarios concurrentes (Actividades)
+* Flujo de mensajes en el sistema (Colaboración)
+* Flujo temporal de mensajes en el sistema (Secuencia)
 
-1. 
 
+## Diagramas 
+
+
+### Diagrama de Componentes 
+
+![alt text](image-10.png)
+
+### Diagrmas  de Secuencia 
+
+![alt text](image-9.png)
+
+### Diagrama de Robustez
+
+![alt text](image-5.png)
+
+### Diagrama de Topología de red
+
+![alt text](image-6.png)
+
+### Diagrama de Despliegue
+
+![alt text](image-7.png)
+
+### Diagrama de Actividades 
+
+![alt text](image-8.png)
 
 # Nobmbres y direcciones 
 
@@ -165,8 +211,6 @@ Framework de documentación:
 Probar el comando dig y analzar la respuesta.
 
 
-
-
 * IP Address (name) -> Ethernet Address (address)
     * IP address identifica a un nodo en un red (sea local o no)
     * Ethernet address identifica a NIC (network interface card) de un nodo
@@ -175,12 +219,89 @@ en una red local
 (Neighbor Discovery) en IPv6
 * Service (name) -> Instances (address)
     * Mapeo del nombre de un servicio a alguna instancia
-    * Resolución a través de Service Discovery(buscar un poco más acerca del tema )
+    * Resolución a través de Service Discovery
     * Diferentes implementaciones existentes: Zookeeper, Istio, Linkerd
 
 
 ![alt text](image-4.png)
 
-Lo que se hace en este caso es para servicios privados de la misma empresa, Puede servir para cuando se cae un servicio privado, lo que hago es redirigir a otro servicio que esté funcionando. O puede estar el caso en el que quiero que haya veces que vaya hacia un servicio o hacia otro.
 
-*QUIERO SABER PORQUE NO USAR DNS PARA ESTO*
+
+El cliente solo envía la solicitud a un proxy o balanceador de carga, y este se encarga de encontrar el servicio adecuado.
+
+1. El cliente envía una solicitud a un endpoint fijo (como un balanceador de carga o proxy).
+
+2. El balanceador consulta el registro de servicios y elige la mejor instancia disponible.
+
+3. El balanceador reenvía la solicitud a la instancia correcta.
+
+
+
+### Ejemplos: 
+### Escenario 1: Failover Automático entre Servicios Internos
+
+#### Caso de Uso
+
+Una empresa tiene un sistema interno de autenticación (auth-service) que permite a los empleados iniciar sesión en sus aplicaciones. Hay dos instancias de este servicio corriendo en distintas regiones:
+
+* auth-service-us
+* auth-service-eu
+
+Si auth-service-us falla, el tráfico debe redirigirse automáticamente a auth-service-eu sin intervención manual.
+
+Solución con Service Discovery (Ejemplo con Consul)
+Con Consul (u otra herramienta de Service Discovery como Kubernetes o AWS Cloud Map), los servicios pueden registrarse dinámicamente y hacer failover sin depender de DNS.
+
+
+### Escenario 2: Redirección de Tráfico según Condiciones (A/B Testing o Canaries)
+#### Caso de Uso
+
+Una empresa está lanzando una nueva versión de su servicio de facturación (billing-service). Quieren que solo el 20% de los usuarios sean redirigidos a la nueva versión (billing-service-v2), mientras que el resto siga usando la versión estable (billing-service-v1).
+
+
+### Razones para usar Server-Side Discovery en lugar de DNS
+1. DNS NO SE ACTUALIZA EN TIEMPO REAL (TTL)
+
+    **Problema**:
+
+    Cuando un servicio cambia de dirección IP (por ejemplo, si un contenedor se reinicia en Kubernetes), los cambios en DNS tardan en propagarse debido al TTL (Time To Live) configurado en los registros DNS.
+
+    **Ejemplo**:
+
+    1. service-a llama a service-b en service-b.mycompany.com (con DNS).
+
+    2. service-b se mueve a otra IP.
+
+    * DNS tarda varios minutos en actualizarse -- service-a sigue llamando a la IP vieja y falla la comunicación.
+
+    * Con Service Discovery en el lado del servidor (ejemplo con Kubernetes):
+
+        * Kubernetes maneja automáticamente los cambios de IP sin depender de DNS.
+
+        * service-a sigue llamando a service-b y el tráfico siempre llega a una instancia válida.
+
+
+
+
+2.  DNS NO BALANCEA EL TRÁFICO DE FORMA INTELIGENTE
+    **Problema**:
+    DNS puede balancear tráfico con Round-Robin DNS, pero no tiene en cuenta el estado real de los servidores.
+
+    **Ejemplo**:
+
+    Tienes dos servidores para payment-service:
+
+    * server-1 (IP: 10.0.1.1)
+    * server-2 (IP: 10.0.1.2)
+
+    
+    DNS responde con ambas IPs de forma aleatoria. --- Si server-1 se cae, DNS no lo sabe y los clientes pueden seguir intentando conectarse a él.
+
+    Con Server-Side Discovery un balanceador de carga o proxy detecta automáticamente qué instancias están vivas y solo envía tráfico a las saludables.
+    Se pueden aplicar reglas avanzadas, como:
+
+    * Enviar tráfico a instancias con menos carga.
+
+    * Evitar servidores con alta latencia.
+
+    * Hacer "circuit breaking" si un servicio falla muchas veces seguidas.
