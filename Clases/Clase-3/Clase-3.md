@@ -50,7 +50,7 @@ Particionamiento de datos: Los datos se deben poder separar, la función se pued
 * Patrones deben poder incluir otros patrones (nesting)
 * Herramientas básicas de trabajo también en multi-computing
 
-![Patrones de procesamiento](image.png)
+<img src="image.png" alt="alt text" width="700">
 
 
 # Multhreadig vs multiprocessing vd Multi-computing
@@ -97,7 +97,8 @@ Particionamiento de datos: Los datos se deben poder separar, la función se pued
 
 ## Multiprocessors(Memoria comppartida)
 
-![tipos de multiprocesos](image-1.png)
+<img src="image-1.png" alt="alt text" width="700">
+
 
  ### MIMD - Multiprocessors - NUMA 
 
@@ -149,7 +150,9 @@ Framework de documentación:
 
 * Vista de Arquitectura 4+1
 
-    ![Arquitectura 4+1](image-2.png)
+
+    <img src="image-12.png" alt="alt text" width="700">
+    
 
 ## Vista Lógica
 * Estructura y funcionalidad del sistema (Clases, Estados) Vista de Física (o Despliegue)
@@ -164,31 +167,61 @@ Framework de documentación:
 ## Diagramas 
 
 
-### Diagrama de Componentes 
 
-![alt text](image-10.png)
+### Vista de desarrollo
 
+#### Diagrama de Componentes 
+
+<img src="image-10.png" alt="alt text" width="700">
+
+
+#### Diagrama de paquetes  
+
+<img src="image-11.png" alt="alt text" width="700">
+
+### Vista fisica
+
+#### Diagrama de Robustez
+
+Comunicación entre los diferentes componentes de nuestro sistema.
+
+
+<img src="image-5.png" alt="alt text" width="700">
+
+#### Diagrama de Despliegue
+
+En este caso se quiere mostrar las diferentes formas en las que se va a desplegar nuestro sistema. Queremos ver como distribuidos nuestro servicios en todos los nodos de nuestro sistema. 
+
+<img src="image-7.png" alt="alt text" width="700">
+
+
+### Vista de procesos
+
+Nos muestean como es el pasaje de mensajes entre diferentes servicios de nuestro sistema.
 ### Diagrmas  de Secuencia 
 
-![alt text](image-9.png)
+Muestra el flujo de mensajes entre los diferentes servicios de nuestro sistema.
 
-### Diagrama de Robustez
+<img src="image-9.png" alt="alt text" width="700">
 
-![alt text](image-5.png)
-
-### Diagrama de Topología de red
-
-![alt text](image-6.png)
-
-### Diagrama de Despliegue
-
-![alt text](image-7.png)
 
 ### Diagrama de Actividades 
 
-![alt text](image-8.png)
+Queremos ver más en profundidad cuales son los procesos que terminan creando más procesos, y cuando cada uno de ellos terminan de realizar alguna tarea
 
-# Nobmbres y direcciones 
+<img src="image-8.png" alt="alt text" width="700">
+
+
+
+
+
+### Diagrama de Topología de red
+
+<img src="image-6.png" alt="alt text" width="700">
+
+
+
+# Nombres y direcciones 
 
 * Nombres
     * Permiten identificar unívocamente a una entidad dentro de un sistema
