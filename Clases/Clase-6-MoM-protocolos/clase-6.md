@@ -154,6 +154,16 @@ Dos posibles arquitecturas
 * La carga de procesamiento se puede paralelizar
 * Admite Lazy Loading dfe las operaciones: Solo procesa nodos requeridos por dependencias.
 
+
+<div style="text-align: center;">
+    <img src="image-10.png" alt="alt text" width="700">
+</div>
+
+
+<div style="text-align: center;">
+    <img src="image-12.png" alt="alt text" width="700">
+</div>
+
 ## Dependencias y non-DAGs 
 
 * También se pueden utilizar DAGs para modelar dependencias entre procesos 
@@ -171,3 +181,4 @@ En este ejemplo se puede ver que tengo operaciones que se ejecutan de manera sec
 
 # Practica de Diseño Multicompunting
 
+![alt text](image-11.png)
