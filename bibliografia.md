@@ -15,3 +15,17 @@
 
 * ZeroMQ: The Guide: http://zguide.zeromq.org/page:all
 * Ejemplos ZeroMQ: https://github.com/7574-sistemas-distribuidos/zeromq-examples
+
+
+## Distribución y Coordinación de Procesos
+
+*  Open MPI:
+    * https://www.open-mpi.org/doc/current/
+*  Apache Flink
+    * https://ci.apache.org/projects/flink/flink-docs-stable/
+*  Apache Beam
+    * https://beam.apache.org/documentation/
+*  Ejemplos de MPI
+    * https://github.com/7574-sistemas-distribuidos/MPI-examples
+*  Ejemplos de Apache Flink y Apache Beam
+    * https://github.com/7574-sistemas-distribuidos/apache-beam-example

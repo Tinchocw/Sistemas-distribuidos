@@ -31,3 +31,11 @@
 
 
 
+
+
+
+
+
+Limitaciones de la arquitectura
+
+
