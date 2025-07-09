@@ -1,22 +1,19 @@
-# Clase 10 
+# Clase 10
 
-## SOA 
+## SOA - Service Oriented Architecture
 
-### Tecnologgías
-* Web service = SOAP + HTTP 
+SOA no es únicamente la definición arquitecturas sino un paradigma orientado al ámbito corporativo.
 
-### 
+### Características de los servicios
 
+#### Tecnologías
 
-## Datos en sistemas a Gran escala 
+- WebServices = SOAP + HTTP
+- ESB preponderante para eventos
+- Service Repository & Discovery para comunicación punto a punto
 
-### Flujo de datos 
+#### Procesos y Servicios
 
-- imagen 
-
-
-aplicación de reservea de vuels, en el cache tengo los vuelos que pedidos, en la bdd puedo tener la información de todos los vuelos, y despues tengo el sistema en el que tengo que hablar con la aeroliena, en este caso esto va a ser asincronico, que la idea de esto es para que el cliente no se quede esperando una respuesta, puede recibir la confirmación más tarde.
-
-
-## Transacción de datos 
-
+- Contract
+- Interface
+- Implementation: Business Logic + Data Management
