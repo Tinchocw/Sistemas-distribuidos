@@ -192,7 +192,29 @@ Hay dos situaciones en la que esto no se puede determinar:
    <img src="image-17.png" alt="alt text" width=500">
 </div>
 
-# Sincronismmo
+# Sincronismo
+
+Los términos sincrónico / asincrónico dependen del contexto:
+
+- Ejecución de Eventos
+  - Sincrónico = bloqueante
+  - Asincrónico = no bloqueante
+- Comunicación entre grupos
+  - Sincrónico = Entidades interactúan entre sí
+  - Asincrónico = Entidades son independientes, se pueden comunicar entre si pero no depende uno del otro para poder avanzar a una siguiente etapa.
+- Sistemas Digitales
+
+  - Sincrónico = Entidades coordinadas por el mismo reloj
+  - Asincrónico = Entidades coordinadas por diferentes relojes
+
+**Sistemas Distribuidos**
+
+- Un algoritmo/protocolo es sincrónico si sus acciones pueden ser delimitadas en el tiempo.
+  - Sincrónico: Entrega de un mensaje posee un timeout conocido.
+  - Parcialmnente sincrónico: Entrega de un mensaje no posee un timeout timeout conocido, o bien es variable.
+  - Asincrónico: Entrega de un mensaje no posee un timeout asociado.
+
+## Algunas propiedades
 
 Depende del contexto:
 
@@ -202,12 +224,38 @@ Depende del contexto:
 
 Nos vas a interesar medir las propiedades para determinar que el sistema es estable.
 
-- Tiempo delivery: Es el tiempo que tarda un mensaje en ser recibido luego de haber sido enviado.
-- Timeout de delivery: Es el tiempo máximo que se espera para recibir un mensaje antes de considerar que ha fallado.
+- Tiempo delivery: Es el tiempo que tarda un mensaje **m** en ser recibido luego de haber sido enviado hacia **P**.
+- Timeout de delivery: Todo mensaje enviado va a ser recibido antes de un tiempo **Tmax** conocido.Es el tiempo máximo que se espera para recibir un mensaje antes de considerar que ha fallado.
 
-- Steadiness: Maxima diferencia entre el mínimo y el máximo tiempo de delivery de caulquier mensaje recibido por un proceso.
+- Steadiness: Maxima diferencia entre el mínimo y el máximo tiempo de delivery de cualquier mensaje recibido por un proceso.
 
-- Tighness:
+  - Define la varianza con la cual un proceso observa que recibe los mensajes
+  - Define que tan constante (steady) es la Recepción de mensajes
+
+   <div style="text-align:center;">
+      <img src="image-18.png" alt="alt text" width=300">
+   </div>
+
+- Tightness: Maxima diferencia entre los tiempos de delivery para cualquier mensaje m. Nos reflaja la varianza que tenemos en los mensajes recibidos en distinttos procesos. Nos va a reflejar la simultaneidad con la que llegan los mensajes a los procesos.
+
+   <div style="text-align:center;">
+      <img src="image-20.png" alt="alt text" width=400">
+   </div>
+
+   <div style="text-align:center;">
+      <img src="image-19.png" alt="alt text" width=500">
+   </div>
+
+## Protocolos Time-driven
+
+- Es sincrónico ya que tenemos un timeout conocido.
+- Establecemos una tecnica de retries.
+
+Teniendo en cuenta estos dos puntos, podría pensar que el protocolo puede llegar a ser asincronico por esta tecnica de retries. Pero esto no es así porque se que mi timeout maximo va a ser "N\*Ttout", esto es así porque voy a conocer la maxima cantidad de reintentos que voy a hacer para enviar el mensaje. Por lo tanto, el protocolo es sincrónico.
+
+   <div style="text-align:center;">
+      <img src="image-21.png" alt="alt text" width=500">
+   </div>
 
 ## Protocolos Clock-driven
 
@@ -215,9 +263,17 @@ Los relojes necesariamente tienen que estar sincronizados
 
 ### Steady and Tight Protocol
 
+   <div>
+      <img src="image-22.png" alt="alt text" width=500">
+   </div>
+
 Nos garantiza que el tiempo de delivery no va a ser mayor a un tiempo máximo. Pero no nos garantiza que el mensaje llegue. Por lo tanto no podemos garantizar que el mensaje llegue en un tiempo determinado.
 
 ### Steady and Tight TDMA Protocol
+
+   <div>
+      <img src="image-23.png" alt="alt text" width=500">
+   </div>
 
 Medio compartido de comunicación. Si estamos todos hablando al mismo tiempo no nos entendemos, tenemos que ir tomando turnos.
 
@@ -225,34 +281,53 @@ Nos podemos asignar periodos de tiempo donde cada uno puede hablar.
 
 Lo importante de estos protocolos es que hay una demora. Hay un envio del mensaje y un procesamiento del mesaje.
 
+En cada uno de los eventos que pasan, uno de los procesos va a poder enviar mensajes a los demás, en el caso de que no quiera enviar nada, simplemente no lo envía. Esto no nos asegura que los mensajes lleguen, pero si nos asegura que los mensajes van a llegar en un tiempo determinado, y se va a handlear ese caso en ese tiempo.
+
+# Orden de mensajes
+
 ## Delivery de Mensajes | Hold-back queue
 
 - Envio del mensaje no es lo msimo que procesarlo(delivery de los mensajes).
 
-- El delivery consiste en procesar el mensaje provecando, eventualmente, cambio en el estado del proceso.
+- El delivery consiste en procesar el mensaje provocando, eventualmente, cambio en el estado del proceso.
+
 - Los mensajes se mantienen en una cola que permite controlar el momento en que se lo libera, permitiendo demorar el delivery.
+
+- Es posible reordenar mensajes en esta cola.
 
 ## Orden sincronico
 
 Todo mensaje posee el mismo timestamp que el mensaje que lo origina. La transmisión del mensaje es de tiempo nulo. (despreciable)
 
-›![alt text](image-5.png)
+   <div>
+      <img src="image-5.png" alt="alt text" width=500">
+   </div>
 
 ## Orden FIFO
 
 Para un emisor y un receptor, si el eminsor envia dos mensajes m1 y m2, y el receptor recibe primero m1 y luego m2, entonces el receptor no puede recibir m2 antes que m1.
 
-![alt text](image-6.png)
+   <div>
+      <img src="image-6.png" alt="alt text" width=500">
+   </div>
 
 ## Orden causal
 
-M1 envia mensaje a M3 e inicia otra comunicación.
+Todo mensaje que implique la generación de un nuevo mensaje, es entregado manteniendo esta secuencia de causalidad sin importar el receptor.
 
-nos interesa que si soy un receptor que recibo un mensaje y luego recibo otro sea consecuencia del otro, entonces quiero ver primero el mensaje que origina la comunicación y luego el mensaje que es consecuencia de esa comunicación.
+Si un mensaje genera otro mensaje, para todo el resto de procesos que reciban mensajes, esa causalidad, que el mensaje 1 genera al mensaje 2, tiene que verse relejada en la recepción de todos los procesos.
 
-![alt text](image-7.png)
+- M1 se envia a P2 y P3.
+- Cuando llega d1. P2 vemos que modifica el estado de P2 y genera un mensaje d2. Lo que quiero decir es que **d1** causa **M2**.
 
-En en caso del dibujo el caso anterior es si efectivamente le llego el mensaje d2 a P1.
+- Luego para que se genere el evento **M3** tiene que llegarme **d1** y **d2**.
+- Cuando se envia el mensaje d3, es importante notar que tiene que llegar despues de los mensajes d1 y d2, ya que d3 es consecuencia de d1 y d2, para cumplir con la causalidad. NO PUEDO RECIBIR d3 ANTES QUE d1 y d2, porque fueron quien lo causaron.
+
+   <div>
+      <img src="image-7.png" alt="alt text" width=500">
+   </div>
+
+Si llega a pasar la situación que hablamos arriba en el P1, lo que se hace es un holdback queue, hasta que llegue el mensaje d2. Una vez que llega el mensaje d2, se procesa el mensaje d3.
 
 ## Orden total
 
@@ -260,13 +335,20 @@ Todo par de mensajes entregados a los mismos receptores es recibido en el mismo 
 
 No implica orden causal. Son dos cosas distintas.
 
+   <div>
+      <img src="image-24.png" alt="alt text" width=500">
+   </div>
+
+Todos van a ver lo mismo. Si en un proceso llega primero un mensaje, los demás procesos van a tener que ver ese mensaje antes que el otro.
+
 # Estado
 
 - Local: tengo un proceso y un momento, el estado es la unión de todas las variables de ese proceso.
 
 - Global: La unión de los estados locales es el estado global.
 
-Analogía:
+## Analogía
+
 Tengo un contador y cuando le hago click suma 1. Si miro para el otro lado y me cambian el contador. Que es lo que ese contador tendría que tener para que no me de cuenta que me lo cambiaron ?
 
 Tendría que tener el mismo número que tenía en el contador.
@@ -293,29 +375,85 @@ Ej 4
 
 Emuldaores: Esta lo que se llama el safe state.
 
-### Sistema con máquinas de estados
+## Sistema como maquina de estados
 
-- Modelo de computación donde tengo un conjunto de variables.
-- Ocurren eventos que me hacen pasar de un estado a otro.
+- Consiste en modelar el sistema como una serie de estados
+- Un estado evoluciona al siguiente estado por la ocurrencia de un evento
 - El estado en el que estoy se refleja en mis variables.
-- Siempre arranco en un evento inicial y termino en otro evento final.
+
+- Asumiendo instrucciones determinísticas, el procesamiento de cualquier evento bajo el estado actual se puede reproducir
 
 ### Que pasa si tengo más procesos
 
 Pasar de estado ocurre con el envio del mensaje.
 
-![alt text](image-8.png)
+   <div>
+      <img src="image-8.png" alt="alt text" width=500">
+   </div>
 
 ### Historia y cortes de un sistema
 
 No soy una maquina de estados. Sino que tengo un historial de lo que esta pasando.
 
-- Historial
-- Corte: Unión del subconjunto de historias de todos los procesos del sistema hasta
+- Historia(corrida): Toda la serie de eventos que ocurren en un sistema desde su inicio hasta su finalización.
+- Corte: Unión del subconjunto de historias de todos los procesos del sistema hasta cierto punto.
 
-Si hago un corte que es consistente, tengo para cda procesos un historial de enventos. Si me me corta la luz lo que puede restaurar el estado sin tener que volver a empezar y comunicame nuevamente con el resto de los procesos.
+### Consistencia
+
+Un corte consistente es cuando por cada evento que este contenido en ese corte, cada evento anterior a ese evento en el mismo proceso, también esta contenido en el corte.
+
+Para todo evento e perteneciente a un corte, si f genera a e, entonces f también pertenece al corte.
+
+   <div>
+      <img src="image-25.png" alt="alt text" width=500">
+   </div>
+
+#### Ejemplos
+
+Si hago un corte que es consistente, tengo para cada procesos un historial de enventos. Si se me corta la luz lo que puede restaurar el estado sin tener que volver a empezar y comunicame nuevamente con el resto de los procesos.
 
 Un ejemplo puede ser con el caso de una transacción. Si tomo el corte(saco la foto en donde es correcto) y lo guardo, puedo volver a ese estado. Si no tengo el corte, tengo que volver a empezar la transacción.
+
+## Algoritmo de Chandy & Lamport
+
+- Algoritmo que permite obtener snapshots de estados globales en sistemas distribuidos
+- El objetivo del algoritmo es almacenar estados de un conjunto de procesos y estados de canales (snapshots) de forma que, aunque los estados no hayan ocurrido al mismo tiempo, el estado global almacenado sea consistente.
+
+Cuando vemos la imagen anterior podemos ver que lo que vamos a estar almacenando en canales van a ser aquellos mensajes que se hayan enviado pero que no se hayan recibido, que no esten dentro del corte.
+
+- Hipótesis
+
+  - Los procesos y los canales de comunicación no fallan
+  - Canales son unidireccionales y poseen orden FIFO
+  - Grafo fuertemente conexo (caminos de ida y vuelta definidos), todos los procesos se pueden comunicar entre sí.
+  - Cada proceso puede iniciar un snapshot en cualquier momento
+
+<div>
+   <img src="image-26.png" alt="alt text" width=700">
+</div>
+
+- Inicialización
+  - Cada proceso tiene un canal de in y otro de out.
+  - Corte: Corte del proceso que arranca en null.
+  - Mensajes: Los mensajes que estan en el curso.
+
+Un proceso cualquiera puede iniciar un snapshot en cualquier momento. Cuando un proceso inicia un snapshot, lo que hace es enviar un mensaje a todos los demás procesos del sistema, notificando que va a iniciar un snapshot. Este mensaje se llama "marker". Este mensaje es el que va a iniciar el corte.
+
+Cuando recibimos un marcados tenemos dos posibilidades:
+
+- El proceso no grabo el estado todavía:
+  - Graba el estado en la variable corte
+  - Logea el mensaje que recibe en el canal de entrada, y todos los mensajes que reciba después de este mensaje los va a logear en el canal de entrada.
+
+Paso a paso:
+
+- P0 inicia snapshot, envía un marcador a el mismo y a los demás procesos.
+- Cada proceso que recibe el marcador, graba su estado y logea el mensaje que recibe en su canal de entrada.
+- La condición de corte de este algortimo es que me tienen que llegar un marcador de todos los demás procesos.
+- En el caso del mensaje M1, es importante tenerlo cuenta ya que se esta enviando antes que el marcador, y como garantizamos que tenemos orden FIFO(entre sender y receiver), entonces va a llegar antes que el marcador.
+- En el caso de M2, no es parte del estado consistente. Esto es así porque el mensaje en P1 se genero despues de haber recibido el primero marcador, por lo tanto es una acción nueva que se genera despues de querer guardar el estado. El mensaje se va a processar, pero no se va a tomar en cuenta en el corte establecido.
+
+La inforamación se esta guardando de forma local en cada proceso.
 
 ## Comunicación Reliable
 
