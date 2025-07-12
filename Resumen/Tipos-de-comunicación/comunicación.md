@@ -168,7 +168,7 @@ En el segundo caso, lo que se puede hacer es migrar el objeto a la maquina que l
 
 # Comunicación orientada a mensajes
 
-## The message-Pasing interface
+## The message-Pasing interface (MPI)
 
 En la busqueda de escribir aplicaciones de alta eficiencia se busco operaciones orientadas a mensajes que lo permitieran.
 
